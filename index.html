@@ -1,364 +1,363 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trip Savings - กองกลางทริปเที่ยว</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- QRCode Library (สร้าง QR Code ออฟไลน์ฟรี ไม่ต้องพึ่งเซิร์ฟเวอร์) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Sarabun', sans-serif;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Savings - ออมเงินไปเที่ยวกับแก๊งเพื่อน 🏖️</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- QRCode Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Confetti พลุฉลองเวลากดจ่ายเงิน -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts: Mitr & Itim -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Mitr', sans-serif; }
+    .font-cute { font-family: 'Itim', cursive; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(2deg); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+  </style>
 </head>
+<body class="bg-[#FFFDF9] text-slate-700 min-h-screen pb-20 selection:bg-pink-200">
 
-<body class="bg-slate-50 text-slate-800 min-h-screen pb-16">
-
-    <!-- Header -->
-    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30">
-        <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-                <div
-                    class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-200">
-                    <i data-lucide="palmtree" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-base sm:text-lg leading-tight text-slate-800" id="header-trip-name">Trip
-                        Savings</h1>
-                    <p class="text-xs text-slate-400">เก็บกองกลางเดือนละ 500 บาท</p>
-                </div>
-            </div>
-            <button onclick="openQRModal()"
-                class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl shadow-md shadow-emerald-200">
-                <i data-lucide="qr-code" class="w-4 h-4"></i>
-                <span>สแกนจ่าย 500฿</span>
-            </button>
+  <!-- Header น่ารักมินิมอล -->
+  <header class="bg-white/80 backdrop-blur-md border-b border-orange-100/80 sticky top-0 z-30">
+    <div class="max-w-2xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-400 via-rose-400 to-amber-300 flex items-center justify-center text-white shadow-md shadow-pink-200 text-xl animate-float">
+          🧳
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="max-w-3xl mx-auto px-4 pt-6 space-y-6">
-
-        <!-- Trip Overview Card -->
-        <div
-            class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-teal-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-slate-200">
-            <div class="relative z-10">
-                <div
-                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-emerald-300 text-xs font-medium mb-3">
-                    <i data-lucide="plane-takeoff" class="w-3.5 h-3.5"></i>
-                    <span id="trip-badge">ทริปปลายทาง: ญี่ปุ่นหน้าหนาว ❄️</span>
-                </div>
-                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                    <div>
-                        <p class="text-slate-300 text-xs sm:text-sm">ยอดเงินสะสมกองกลางปัจจุบัน</p>
-                        <h2 id="total-amount"
-                            class="text-3xl sm:text-4xl font-extrabold tracking-tight mt-1 text-white">฿0</h2>
-                    </div>
-                    <div class="text-left sm:text-right">
-                        <p class="text-slate-300 text-xs sm:text-sm">เป้าหมายทริป</p>
-                        <p id="target-amount" class="text-xl sm:text-2xl font-bold text-emerald-400 mt-1">฿30,000</p>
-                    </div>
-                </div>
-
-                <!-- Progress Bar -->
-                <div class="mt-5">
-                    <div class="flex justify-between text-xs text-slate-300 mb-2">
-                        <span>ความคืบหน้า</span>
-                        <span id="progress-percent" class="font-bold text-emerald-300">0%</span>
-                    </div>
-                    <div class="w-full h-3 bg-white/15 rounded-full overflow-hidden p-0.5">
-                        <div id="progress-bar"
-                            class="h-full bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full transition-all duration-700 w-0">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Decorative Background Blur -->
-            <div
-                class="absolute -right-10 -bottom-10 w-44 h-44 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none">
-            </div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg leading-tight text-slate-800 flex items-center gap-1.5 font-cute text-xl">
+            Trip Savings <span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-sans font-medium">แก๊งเพื่อน</span>
+          </h1>
+          <p class="text-xs text-slate-400">เก็บเดือนละ 500฿ ไปเที่ยวกันนน ✨</p>
         </div>
+      </div>
+      <button onclick="openQRModal()" class="flex items-center gap-1.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 active:scale-95 transition-all text-white text-xs sm:text-sm font-medium px-4 py-2.5 rounded-2xl shadow-lg shadow-pink-200">
+        <span>สแกนจ่าย</span>
+        <span class="bg-white/20 px-1.5 py-0.5 rounded-lg text-xs font-bold">500฿</span>
+      </button>
+    </div>
+  </header>
 
-        <!-- Month Selector -->
-        <div
-            class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-                <label class="text-xs font-semibold uppercase text-slate-400 tracking-wider">เลือกดูรอบเดือน</label>
-                <div class="flex items-center gap-2 mt-1">
-                    <select id="month-select" onchange="renderMembers()"
-                        class="bg-slate-50 border border-slate-200 text-slate-800 text-sm font-semibold rounded-xl px-3 py-2 focus:ring-2 focus:ring-emerald-500 outline-none">
-                        <!-- Populated by JS -->
-                    </select>
-                    <span class="text-xs text-slate-500">(จ่ายวันไหนก็ได้ในเดือน)</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-4 text-xs font-medium">
-                <span class="flex items-center gap-1.5 text-emerald-600"><span
-                        class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> จ่ายแล้ว</span>
-                <span class="flex items-center gap-1.5 text-amber-600"><span
-                        class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> รอชำระ</span>
-            </div>
+  <!-- Main Container -->
+  <main class="max-w-2xl mx-auto px-4 pt-6 space-y-5">
+
+    <!-- Card 1: การ์ดเป้าหมายทริปสดใสแบบ Pastel Dream -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-amber-100 via-rose-100 to-pink-100 border-2 border-white rounded-[32px] p-6 sm:p-7 shadow-xl shadow-pink-100/60">
+      
+      <!-- Decorative Badges -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-sm text-rose-600 text-xs font-semibold shadow-sm">
+          <span>🌸</span> <span id="trip-badge">ทริปญี่ปุ่นหน้าหนาว ❄️</span>
+        </span>
+        <span class="text-xs bg-white/70 px-2.5 py-1 rounded-full text-slate-500 font-medium">
+          เป้าหมาย ฿30,000
+        </span>
+      </div>
+
+      <!-- Money Display -->
+      <div class="text-center sm:text-left my-2">
+        <p class="text-xs text-slate-500 font-medium">ยอดกระปุกหมูกองกลางตอนนี้ 🐷</p>
+        <div class="flex items-baseline justify-center sm:justify-start gap-2 mt-1">
+          <h2 id="total-amount" class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-800 font-cute">฿0</h2>
+          <span class="text-xs text-rose-500 font-semibold bg-white/90 px-2 py-0.5 rounded-lg shadow-xs" id="remaining-text">ขาดอีก ฿30,000 สู้ๆ!</span>
         </div>
+      </div>
 
-        <!-- Members Savings Status List -->
-        <div class="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-sm">
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
-                    <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i>
-                    <span>สถานะเพื่อนๆ ในกลุ่ม</span>
-                </h3>
-                <span id="paid-count"
-                    class="text-xs bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-full">0/0 คน</span>
-            </div>
-
-            <div id="members-list" class="divide-y divide-slate-100 space-y-1">
-                <!-- Rendered by JS -->
-            </div>
+      <!-- Cute Bouncy Progress Bar -->
+      <div class="mt-5 bg-white/80 p-3 rounded-2xl shadow-inner border border-white">
+        <div class="flex justify-between text-xs font-medium text-slate-600 mb-1.5 px-1">
+          <span>ออกเดินทางใกล้ถึงยังนะ?</span>
+          <span id="progress-percent" class="font-bold text-rose-500 font-cute text-sm">0%</span>
         </div>
-
-        <!-- Git Sync Helper Card -->
-        <div
-            class="bg-white border border-slate-200/80 rounded-2xl p-4 text-xs text-slate-600 shadow-sm flex items-start gap-3">
-            <i data-lucide="git-branch" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
-            <div class="w-full">
-                <p class="font-semibold text-slate-800 text-sm mb-1">จัดการข้อมูลผ่าน Git (ไม่ต้องมี Database)</p>
-                <p class="text-slate-500 leading-relaxed">
-                    เมื่อมีการติ๊กอัปเดตสถานะ คุณสามารถกดปุ่มด้านล่างเพื่อดาวน์โหลดไฟล์ <code
-                        class="text-emerald-700 font-mono bg-emerald-50 px-1 py-0.5 rounded">data.json</code> แล้วนำไป
-                    Commit ขึ้น GitHub เพื่อให้เพื่อนทุกคนเห็นยอดเงินล่าสุดตรงกันได้ทันที!
-                </p>
-                <div class="mt-3 flex flex-wrap gap-2">
-                    <button onclick="exportDataJSON()"
-                        class="bg-slate-900 hover:bg-slate-800 text-white font-medium px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 transition-colors">
-                        <i data-lucide="download" class="w-3.5 h-3.5"></i> บันทึก data.json ลงเครื่อง
-                    </button>
-                </div>
-            </div>
+        <div class="w-full h-4 bg-rose-100/70 rounded-full overflow-hidden p-0.5 relative">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-amber-400 via-rose-400 to-pink-500 rounded-full transition-all duration-700 w-0"></div>
         </div>
+      </div>
 
-    </main>
-
-    <!-- Modal PromptPay QR -->
-    <div id="qr-modal"
-        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl relative">
-            <button onclick="closeQRModal()"
-                class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                <i data-lucide="x" class="w-4 h-4"></i>
-            </button>
-
-            <div
-                class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
-                <i data-lucide="wallet" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-lg font-bold text-slate-800">สแกนจ่ายเงินกองกลาง</h3>
-            <p class="text-xs text-slate-500 mt-0.5">ยอดประจำเดือน: <span class="font-bold text-slate-800 text-sm">฿500
-                    บาท</span></p>
-
-            <!-- QR Display Box -->
-            <div class="my-4 p-4 bg-slate-50 rounded-2xl border border-slate-200/80 inline-flex flex-col items-center">
-                <div id="qrcode" class="p-2 bg-white rounded-xl shadow-sm"></div>
-                <div class="mt-3 text-xs text-slate-600 font-medium">
-                    พร้อมเพย์: <span id="promptpay-id" class="font-mono font-bold text-slate-800">081-234-5678</span>
-                </div>
-            </div>
-
-            <p class="text-xs text-slate-400 mb-4">จ่ายวันไหนก็ได้ในเดือน เมื่อโอนแล้วบอกเหรัญญิกได้เลย ✨</p>
-
-            <button onclick="closeQRModal()"
-                class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 rounded-xl text-sm transition-colors">
-                ปิดหน้าต่าง
-            </button>
-        </div>
+      <!-- Floating Emoji Sticker -->
+      <div class="absolute -right-2 -bottom-2 text-7xl select-none pointer-events-none opacity-20">
+        ✈️
+      </div>
     </div>
 
-    <script>
-        // ==========================================
-        // กำหนดข้อมูลเริ่มต้น (แก้ไขรายชื่อเพื่อนและเบอร์พร้อมเพย์ตรงนี้ได้เลย)
-        // ==========================================
-        const defaultData = {
-            tripName: "ทริปญี่ปุ่นหน้าหนาว ❄️",
-            targetAmount: 30000,
-            monthlyQuota: 500,
-            promptpayNumber: "0812345678", // <-- ใส่เบอร์พร้อมเพย์ของคุณที่นี่
-            months: [
-                "ตุลาคม 2026", "พฤศจิกายน 2026", "ธันวาคม 2026",
-                "มกราคม 2027", "กุมภาพันธ์ 2027", "มีนาคม 2027"
-            ],
-            members: [
-                { id: 1, name: "เบนซ์ (เหรัญญิก)", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Benz" },
-                { id: 2, name: "ต้น", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Ton" },
-                { id: 3, name: "มายด์", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Mind" },
-                { id: 4, name: "นิว", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=New" },
-                { id: 5, name: "แพรว", avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=Praew" }
-            ],
-            // บันทึกสถานะการจ่าย { "memberId_monthIndex": true }
-            payments: {
-                "1_0": true,
-                "2_0": true
-            }
-        };
+    <!-- Month Selector (สลับดูรอบเดือน) -->
+    <div class="bg-white p-4 rounded-3xl border border-rose-100/60 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">📅</span>
+        <div>
+          <label class="text-xs font-bold text-slate-400 uppercase tracking-wide">รอบประจำเดือน</label>
+          <div class="mt-0.5">
+            <select id="month-select" onchange="renderMembers()" class="bg-amber-50/70 border border-amber-200/60 text-slate-800 text-sm font-semibold rounded-xl px-3 py-1.5 focus:ring-2 focus:ring-rose-400 outline-none cursor-pointer">
+              <!-- Rendered by JS -->
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs bg-slate-50 px-3 py-2 rounded-2xl w-fit">
+        <span class="flex items-center gap-1.5 text-emerald-600 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm"></span> จ่ายแล้ว เย้!
+        </span>
+        <span class="flex items-center gap-1.5 text-amber-600 font-medium">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm"></span> รอหยอดกระปุก
+        </span>
+      </div>
+    </div>
 
-        // โหลดข้อมูลจาก LocalStorage (ถ้ามี)
-        const saved = localStorage.getItem("trip_savings_git_data");
-        const appData = saved ? JSON.parse(saved) : defaultData;
+    <!-- Members List -->
+    <div class="bg-white rounded-3xl border border-rose-100/60 p-5 shadow-sm space-y-3">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2 font-cute text-lg">
+          <span>👥 เพื่อนร่วมทริป</span>
+        </h3>
+        <span id="paid-count" class="text-xs bg-pink-50 text-pink-600 font-bold px-3 py-1 rounded-full border border-pink-100">
+          0/0 คน
+        </span>
+      </div>
 
-        function saveState() {
-            localStorage.setItem("trip_savings_git_data", JSON.stringify(appData));
-            updateOverview();
-        }
+      <div id="members-list" class="space-y-2">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
 
-        // Init Month Selector
-        const monthSelect = document.getElementById("month-select");
-        appData.months.forEach((m, idx) => {
-            const opt = document.createElement("option");
-            opt.value = idx;
-            opt.textContent = m;
-            monthSelect.appendChild(opt);
-        });
+    <!-- Git Sync Helper -->
+    <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-3xl p-4 text-xs text-slate-600 flex items-center justify-between gap-3 shadow-xs">
+      <div class="flex items-center gap-2.5">
+        <span class="text-2xl">💾</span>
+        <div>
+          <p class="font-bold text-slate-800">เซฟข้อมูลเข้า Git (ฟรี 100%)</p>
+          <p class="text-slate-500 text-[11px]">ติ๊กเสร็จแล้วกดโหลดไฟล์ไป Commit ขึ้น GitHub ได้เลย</p>
+        </div>
+      </div>
+      <button onclick="exportDataJSON()" class="bg-white hover:bg-amber-100/60 text-slate-700 font-semibold px-3 py-2 rounded-2xl border border-amber-200 text-xs shadow-xs active:scale-95 transition-all flex items-center gap-1">
+        <i data-lucide="download" class="w-3.5 h-3.5 text-amber-600"></i>
+        <span>โหลด data.json</span>
+      </button>
+    </div>
 
-        document.getElementById("header-trip-name").textContent = appData.tripName;
-        document.getElementById("trip-badge").textContent = `เป้าหมาย: ${appData.tripName}`;
+  </main>
 
-        // Render รายชื่อเพื่อนและสถานะของเดือนที่เลือก
-        function renderMembers() {
-            const currentMonthIdx = monthSelect.value;
-            const membersList = document.getElementById("members-list");
-            membersList.innerHTML = "";
+  <!-- Modal PromptPay QR แบบคิ้วท์ๆ -->
+  <div id="qr-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-[32px] max-w-xs w-full p-6 text-center shadow-2xl relative border-4 border-rose-50 animate-in fade-in zoom-in-95 duration-200">
+      
+      <button onclick="closeQRModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center transition-colors">
+        ✕
+      </button>
 
-            let paidCount = 0;
+      <div class="w-14 h-14 bg-gradient-to-tr from-rose-100 to-pink-100 text-2xl rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-inner">
+        🧁
+      </div>
+      <h3 class="text-lg font-bold text-slate-800 font-cute text-xl">สแกนจ่ายเงินกองกลาง</h3>
+      <p class="text-xs text-slate-500">หยอดกระปุกเดือนนี้ <span class="font-bold text-rose-500 font-sans text-sm">500 บาท</span></p>
 
-            appData.members.forEach(member => {
-                const key = `${member.id}_${currentMonthIdx}`;
-                const isPaid = !!appData.payments[key];
-                if (isPaid) paidCount++;
+      <!-- QR Display Box -->
+      <div class="my-4 p-3.5 bg-amber-50/50 rounded-2xl border border-amber-100 inline-flex flex-col items-center">
+        <div id="qrcode" class="p-2 bg-white rounded-xl shadow-xs"></div>
+        <div class="mt-2.5 text-xs text-slate-600 font-medium">
+          พร้อมเพย์: <span id="promptpay-id" class="font-bold text-slate-800 font-mono">081-234-5678</span>
+        </div>
+      </div>
 
-                const item = document.createElement("div");
-                item.className = "flex items-center justify-between py-3 px-2 rounded-xl hover:bg-slate-50 transition-colors";
-                item.innerHTML = `
+      <p class="text-[11px] text-slate-400 mb-4">โอนวันไหนก็ได้ในเดือนน้า จ่ายแล้วบอกเพื่อนด้วยยย 💖</p>
+
+      <button onclick="closeQRModal()" class="w-full bg-rose-500 hover:bg-rose-600 active:scale-95 text-white font-semibold py-2.5 rounded-2xl text-xs shadow-md shadow-rose-200 transition-all">
+        เรียบร้อยแล้ว
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ข้อมูลเริ่มต้น (แก้ไขชื่อและเบอร์พร้อมเพย์ตรงนี้ได้เลย)
+    const defaultData = {
+      tripName: "ทริปญี่ปุ่นหน้าหนาว ❄️",
+      targetAmount: 30000,
+      monthlyQuota: 500,
+      promptpayNumber: "0812345678", // <-- ใส่เบอร์พร้อมเพย์ของคุณ
+      months: [
+        "ตุลาคม 2026", "พฤศจิกายน 2026", "ธันวาคม 2026", 
+        "มกราคม 2027", "กุมภาพันธ์ 2027", "มีนาคม 2027"
+      ],
+      members: [
+        { id: 1, name: "เบนซ์ (เหรัญญิก)", avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=Benz" },
+        { id: 2, name: "ต้น", avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=Ton" },
+        { id: 3, name: "มายด์", avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=Mind" },
+        { id: 4, name: "นิว", avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=New" },
+        { id: 5, name: "แพรว", avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=Praew" }
+      ],
+      payments: {
+        "1_0": true,
+        "2_0": true
+      }
+    };
+
+    const saved = localStorage.getItem("trip_savings_git_data");
+    const appData = saved ? JSON.parse(saved) : defaultData;
+
+    function saveState() {
+      localStorage.setItem("trip_savings_git_data", JSON.stringify(appData));
+      updateOverview();
+    }
+
+    const monthSelect = document.getElementById("month-select");
+    appData.months.forEach((m, idx) => {
+      const opt = document.createElement("option");
+      opt.value = idx;
+      opt.textContent = m;
+      monthSelect.appendChild(opt);
+    });
+
+    document.getElementById("trip-badge").textContent = appData.tripName;
+
+    function renderMembers() {
+      const currentMonthIdx = monthSelect.value;
+      const membersList = document.getElementById("members-list");
+      membersList.innerHTML = "";
+
+      let paidCount = 0;
+
+      appData.members.forEach(member => {
+        const key = `${member.id}_${currentMonthIdx}`;
+        const isPaid = !!appData.payments[key];
+        if (isPaid) paidCount++;
+
+        const item = document.createElement("div");
+        item.className = `flex items-center justify-between p-3 rounded-2xl border transition-all duration-200 ${
+          isPaid ? 'bg-emerald-50/60 border-emerald-100' : 'bg-slate-50/60 border-slate-100 hover:bg-slate-100/60'
+        }`;
+
+        item.innerHTML = `
           <div class="flex items-center gap-3">
-            <img src="${member.avatar}" alt="${member.name}" class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200" />
+            <div class="relative">
+              <img src="${member.avatar}" alt="${member.name}" class="w-11 h-11 rounded-2xl bg-white p-0.5 border border-slate-200 shadow-xs object-cover" />
+              ${isPaid ? '<span class="absolute -bottom-1 -right-1 text-xs">💖</span>' : ''}
+            </div>
             <div>
               <p class="font-semibold text-sm text-slate-800">${member.name}</p>
-              <p class="text-xs ${isPaid ? 'text-emerald-600 font-medium' : 'text-slate-400'}">
-                ${isPaid ? '✓ ชำระแล้ว ฿500' : 'ยังไม่ชำระ (฿500)'}
+              <p class="text-xs ${isPaid ? 'text-emerald-600 font-semibold' : 'text-slate-400'}">
+                ${isPaid ? '✨ จ่ายเรียบร้อย ฿500' : 'รอเก็บ 500฿ ในเดือนนี้'}
               </p>
             </div>
           </div>
-          <button onclick="togglePayment(${member.id}, ${currentMonthIdx})" 
-            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all active:scale-95 flex items-center gap-1.5 ${isPaid
-                        ? 'bg-emerald-100/70 text-emerald-700 hover:bg-emerald-200/70'
-                        : 'bg-slate-100 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600'
-                    }">
-            <i data-lucide="${isPaid ? 'check-circle-2' : 'circle'}" class="w-4 h-4"></i>
-            <span>${isPaid ? 'จ่ายแล้ว' : 'ติ๊กชำระ'}</span>
+
+          <button onclick="togglePayment(${member.id}, ${currentMonthIdx}, event)" 
+            class="px-3.5 py-2 rounded-xl text-xs font-semibold transition-all active:scale-90 flex items-center gap-1.5 shadow-xs ${
+              isPaid 
+                ? 'bg-emerald-500 text-white hover:bg-emerald-600' 
+                : 'bg-white text-slate-600 border border-slate-200 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200'
+            }">
+            <span>${isPaid ? '✓ จ่ายแล้ว' : '🐷 ติ๊กจ่าย'}</span>
           </button>
         `;
-                membersList.appendChild(item);
-            });
+        membersList.appendChild(item);
+      });
 
-            document.getElementById("paid-count").textContent = `${paidCount}/${appData.members.length} คนจ่ายแล้ว`;
-            lucide.createIcons();
+      document.getElementById("paid-count").textContent = `${paidCount}/${appData.members.length} คนจ่ายแล้ว`;
+      lucide.createIcons();
+    }
+
+    function togglePayment(memberId, monthIdx, event) {
+      const key = `${memberId}_${monthIdx}`;
+      if (appData.payments[key]) {
+        delete appData.payments[key];
+      } else {
+        appData.payments[key] = true;
+        // ยิงพลุฉลอง Confetti 🎉 น่ารักๆ
+        if (window.confetti) {
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.7 }
+          });
         }
+      }
+      saveState();
+      renderMembers();
+    }
 
-        function togglePayment(memberId, monthIdx) {
-            const key = `${memberId}_${monthIdx}`;
-            if (appData.payments[key]) {
-                delete appData.payments[key];
-            } else {
-                appData.payments[key] = true;
-            }
-            saveState();
-            renderMembers();
+    function updateOverview() {
+      const totalPaidCount = Object.keys(appData.payments).length;
+      const currentTotal = totalPaidCount * appData.monthlyQuota;
+      const target = appData.targetAmount;
+      const percent = Math.min(Math.round((currentTotal / target) * 100), 100);
+      const remaining = Math.max(target - currentTotal, 0);
+
+      document.getElementById("total-amount").textContent = `฿${currentTotal.toLocaleString()}`;
+      document.getElementById("progress-percent").textContent = `${percent}%`;
+      document.getElementById("progress-bar").style.width = `${percent}%`;
+      document.getElementById("remaining-text").textContent = remaining === 0 ? "🎉 ครบเป้าหมายแล้ว!" : `ขาดอีก ฿${remaining.toLocaleString()} สู้ๆ!`;
+    }
+
+    // สร้าง PromptPay Payload EMVCo
+    function generatePromptPayPayload(phone, amount) {
+      const cleanPhone = phone.replace(/[^0-9]/g, '');
+      const formattedPhone = cleanPhone.startsWith('0') ? '0066' + cleanPhone.substring(1) : cleanPhone;
+      
+      const f1 = "000201010211";
+      const sub00 = "0016A000000677010111";
+      const sub01 = `01${String(formattedPhone.length).padStart(2, '0')}${formattedPhone}`;
+      const f29 = `29${String((sub00 + sub01).length).padStart(2, '0')}${sub00}${sub01}`;
+      const f53 = "5303764";
+      const amtStr = Number(amount).toFixed(2);
+      const f54 = `54${String(amtStr.length).padStart(2, '0')}${amtStr}`;
+      const f58 = "5802TH";
+      const data = `${f1}${f29}${f53}${f54}${f58}6304`;
+      
+      let crc = 0xFFFF;
+      for (let i = 0; i < data.length; i++) {
+        crc ^= (data.charCodeAt(i) << 8);
+        for (let j = 0; j < 8; j++) {
+          if (crc & 0x8000) crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+          else crc = (crc << 1) & 0xFFFF;
         }
+      }
+      return data + crc.toString(16).toUpperCase().padStart(4, '0');
+    }
 
-        function updateOverview() {
-            const totalPaidCount = Object.keys(appData.payments).length;
-            const currentTotal = totalPaidCount * appData.monthlyQuota;
-            const target = appData.targetAmount;
-            const percent = Math.min(Math.round((currentTotal / target) * 100), 100);
+    let qrInstance = null;
+    function openQRModal() {
+      document.getElementById("qr-modal").classList.remove("hidden");
+      if (!qrInstance) {
+        const payload = generatePromptPayPayload(appData.promptpayNumber, appData.monthlyQuota);
+        qrInstance = new QRCode(document.getElementById("qrcode"), {
+          text: payload,
+          width: 160,
+          height: 160,
+          colorDark: "#1e293b",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.M
+        });
+        document.getElementById("promptpay-id").textContent = appData.promptpayNumber;
+      }
+    }
 
-            document.getElementById("total-amount").textContent = `฿${currentTotal.toLocaleString()}`;
-            document.getElementById("target-amount").textContent = `฿${target.toLocaleString()}`;
-            document.getElementById("progress-percent").textContent = `${percent}%`;
-            document.getElementById("progress-bar").style.width = `${percent}%`;
-        }
+    function closeQRModal() {
+      document.getElementById("qr-modal").classList.add("hidden");
+    }
 
-        // ฟังก์ชันสร้าง PromptPay QR Payload (EMVCo Standard) ฝั่งไคลเอนต์ ฟรี 100%
-        function generatePromptPayPayload(phone, amount) {
-            const cleanPhone = phone.replace(/[^0-9]/g, '');
-            const formattedPhone = cleanPhone.startsWith('0') ? '0066' + cleanPhone.substring(1) : cleanPhone;
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", "data.json");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
 
-            const f1 = "000201010211";
-            const sub00 = "0016A000000677010111";
-            const sub01 = `01${String(formattedPhone.length).padStart(2, '0')}${formattedPhone}`;
-            const f29 = `29${String((sub00 + sub01).length).padStart(2, '0')}${sub00}${sub01}`;
-            const f53 = "5303764";
-            const amtStr = Number(amount).toFixed(2);
-            const f54 = `54${String(amtStr.length).padStart(2, '0')}${amtStr}`;
-            const f58 = "5802TH";
-            const data = `${f1}${f29}${f53}${f54}${f58}6304`;
-
-            let crc = 0xFFFF;
-            for (let i = 0; i < data.length; i++) {
-                crc ^= (data.charCodeAt(i) << 8);
-                for (let j = 0; j < 8; j++) {
-                    if (crc & 0x8000) crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
-                    else crc = (crc << 1) & 0xFFFF;
-                }
-            }
-            return data + crc.toString(16).toUpperCase().padStart(4, '0');
-        }
-
-        // Modal QR Controls
-        let qrInstance = null;
-        function openQRModal() {
-            document.getElementById("qr-modal").classList.remove("hidden");
-            if (!qrInstance) {
-                const payload = generatePromptPayPayload(appData.promptpayNumber, appData.monthlyQuota);
-                qrInstance = new QRCode(document.getElementById("qrcode"), {
-                    text: payload,
-                    width: 175,
-                    height: 175,
-                    colorDark: "#0f172a",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-                document.getElementById("promptpay-id").textContent = appData.promptpayNumber;
-            }
-        }
-
-        function closeQRModal() {
-            document.getElementById("qr-modal").classList.add("hidden");
-        }
-
-        // ส่งออกข้อมูลเป็น JSON เพื่อนำไป Commit ลง Git
-        function exportDataJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
-            const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", "data.json");
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        }
-
-        // เริ่มต้นระบบ
-        renderMembers();
-        updateOverview();
-        lucide.createIcons();
-    </script>
+    renderMembers();
+    updateOverview();
+    lucide.createIcons();
+  </script>
 </body>
-
 </html>
